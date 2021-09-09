@@ -1,0 +1,138 @@
+﻿@page "/counter"
+@using Demo.Data
+@inject FlightFinderService FlightService
+@inject NavigationManager Navigation
+
+@{
+    var totalFlightCount = (_departureFlights?.Length ?? 0) + (_returnFlights?.Length ?? 0);
+}
+
+<PageTitle>@(totalFlightCount > 0 ? $"({totalFlightCount}) " : string.Empty)FlightFinder™</PageTitle>
+<HeadContent>
+    <meta name="description" content="FlightFinder search with @totalFlightCount results">
+</HeadContent>
+
+<h1>Welcome to FlightFinder™!</h1>
+
+<p>
+    Finding round-trip flights from <strong>your current location</strong> to <strong>Hawaii</strong><br>
+    <i>You can't search other destinations, but why would you want to?</i>
+</p>
+
+<p>
+    Departure date:
+    <input type="date" @bind-value="_departureDate" />
+</p>
+
+<p>
+    Return date:
+    <input type="date" @bind-value="_returnDate" />
+</p>
+
+<p>
+    Preferred departure time:
+    <input type="time" @bind-value="_preferredDepartureTime" />
+</p>
+
+<p>
+    Airlines:<br>
+    <select multiple @bind="_selectedAirlineNames">
+        <option value="@Airline.Southwest">Southwest</option>
+        <option value="@Airline.Delta">Delta</option>
+        <option value="@Airline.United">United</option>
+        <option value="@Airline.Spirit">Spirit</option>
+    </select>
+</p>
+
+<p>
+    <button class="btn btn-primary" @onclick="SearchForFlights">Search!</button>
+</p>
+
+    <p>
+        <h2>Departure flights</h2>
+        <FlightTable Flights="_departureFlights" />
+    </p>
+    <p>
+        <h2>Return flights</h2>
+        <FlightTable Flights="_returnFlights" />
+    </p>
+
+@code {
+    private int currentCount = 0;
+
+    private DateOnly _departureDate = DateOnly.FromDateTime(DateTime.Now);
+    private DateOnly _returnDate = DateOnly.FromDateTime(DateTime.Now).AddDays(1);
+    private TimeOnly _preferredDepartureTime = new(12, 0, 0);
+    private string[] _selectedAirlineNames = new string[] { };
+    private Flight[] _departureFlights;
+    private Flight[] _returnFlights;
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public DateOnly DepartureDate
+    {
+        get => _departureDate;
+        set => _departureDate = value != default ? value : _departureDate;
+    }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public DateOnly ReturnDate
+    {
+        get => _returnDate;
+        set => _returnDate = value != default ? value : _returnDate;
+    }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public TimeOnly PreferredDepartureTime
+    {
+        get => _preferredDepartureTime;
+        set => _preferredDepartureTime = value != default ? value : _preferredDepartureTime;
+    }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string[] AirlineName
+    {
+        get => _selectedAirlineNames;
+        set => _selectedAirlineNames = value != default ? value : _selectedAirlineNames;
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        return GetFlightsAsync();
+    }
+
+    private Task SearchForFlights()
+    {
+        UpdateUri();
+        return GetFlightsAsync();
+    }
+
+    private async Task GetFlightsAsync()
+    {
+        var selectedAirlines = _selectedAirlineNames
+            .Select(name => (Airline)Enum.Parse(typeof(Airline), name))
+            .ToArray();
+
+        (_departureFlights, _returnFlights) = await FlightService.GetFlights(
+            selectedAirlines,
+            _departureDate,
+            _returnDate,
+            _preferredDepartureTime);
+    }
+
+    private void UpdateUri()
+    {
+        var uri = Navigation.GetUriWithQueryParameters(new Dictionary<string, object>()
+        {
+            [nameof(DepartureDate)] = _departureDate,
+            [nameof(ReturnDate)] = _returnDate,
+            [nameof(PreferredDepartureTime)] = _preferredDepartureTime,
+            [nameof(AirlineName)] = _selectedAirlineNames,
+        });
+
+        Navigation.NavigateTo(uri);
+    }
+}

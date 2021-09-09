@@ -1,0 +1,34 @@
+﻿@using Demo.Data
+
+@if (Flights is not null)
+{
+    @if (Flights.Length == 0)
+    {
+        <i>No flights found</i>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Airline</th>
+                    <th>Flight departure time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var flight in Flights)
+                {
+                    <tr>
+                        <td>@flight.Airline</td>
+                        <td>@flight.DepartureDateTime</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@code {
+    [Parameter]
+    public Flight[] Flights { get; set; }
+}

@@ -17,10 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="js\blazor-adapter.component.ts">
+    <None Include="js\blazor-adapter.component.ts">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="js\blazor-react.js">
+    <None Include="js\blazor-react.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

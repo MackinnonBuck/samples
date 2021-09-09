@@ -7,18 +7,15 @@ import { Component } from '@angular/core';
       <h1>Welcome to {{title}}!</h1>
       <p>This is an Angular application that can also host Blazor components.</p>
       <p>
-        <button (click)="addBlazorCounter()">Add Blazor counter</button>
-        <button (click)="removeBlazorCounter()">Remove Blazor counter</button>
-        <button (click)="modifyParameters()">Modify parameters from JS</button>
+        <button (click)="addTodoItem()">Add TODO item</button>
       </p>
 
-      <div *ngFor="let counter of blazorCounters">
-        <counter
-          [title]="counter.title"
-          [incrementAmount]="counter.incrementAmount"
-          [customObject]="counter.customObject"
-          (customCallback)="customCallback($event)">
-        </counter>
+      <div *ngFor="let todoItem of todoItems">
+        <!-- TODO: Render the TODO items list? -->
+        <todo-item
+          [index]="todoItem.index"
+          (onRemove)="removeTodoItem(todoItem.index)">
+        </todo-item>
       </div>
     </div>
   `,
@@ -27,36 +24,19 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'angular-app-with-blazor';
 
-  blazorCounters: any[] = [];
-  nextCounterIndex = 1;
+  todoItems: any[] = [];
 
-  addBlazorCounter() {
-    const index = this.nextCounterIndex++;
-    this.blazorCounters.push({
-      title: `Counter ${index}`,
-      incrementAmount: index,
-      customObject: { StringValue: 'Hello!', IntegerValue: 42 }
+  addTodoItem() {
+    this.todoItems.push({
+      index: this.todoItems.length,
     });
   }
 
-  removeBlazorCounter() {
-    this.blazorCounters.pop();
-  }
+  removeTodoItem(index: number) {
+    this.todoItems.splice(index, 1);
 
-  modifyParameters() {
-    for (const counter of this.blazorCounters) {
-      counter.incrementAmount++;
-
-      let { StringValue, IntegerValue } = counter.customObject;
-
-      StringValue += '!';
-      IntegerValue -= 1;
-
-      counter.customObject = { StringValue, IntegerValue };
+    for (let i = index; i < this.todoItems.length; i++) {
+      this.todoItems[i].index = i;
     }
-  }
-
-  customCallback(mouseEventArgs: any) {
-    console.log(`Custom callback: ${JSON.stringify(mouseEventArgs)}`);
   }
 }

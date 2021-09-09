@@ -7,9 +7,7 @@ using JSComponentGeneration.React;
 using BlazorAppGeneratingJSComponents;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-
-builder.RootComponents.RegisterForAngular<Counter>();
-builder.RootComponents.RegisterForReact<Counter>();
+builder.RootComponents.RegisterForAngular<TodoItem>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

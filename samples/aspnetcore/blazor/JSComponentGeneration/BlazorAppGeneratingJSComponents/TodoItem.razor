@@ -1,0 +1,33 @@
+﻿@attribute [GenerateAngular]
+
+<p>
+    <strong>@($"{Index + 1}: ")</strong>
+    @if (_editing)
+    {
+        <input type="text" placeholder="@($"Write todo item {Index}")" @bind-value="_content" />
+    }
+    else
+    {
+        <span>@(string.IsNullOrEmpty(_content) ? "<no content>" : _content)</span>
+    }
+</p>
+
+<button @onclick="OnToggleEdit">@(_editing ? "Confirm" : "Edit")</button>
+<button @onclick="OnRemove">Remove</button>
+<hr>
+
+@code {
+    private bool _editing = true;
+    private string _content = string.Empty;
+
+    [Parameter]
+    public int Index { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnRemove { get; set; }
+
+    private void OnToggleEdit()
+    {
+        _editing = !_editing;
+    }
+}
