@@ -1,7 +1,49 @@
 <html>
+    <head>
+        <script>
+            const todoList = [];
+
+            async function addTodo() {
+                const todoListElement = document.getElementById('todo-list');
+
+                // Create a new Blazor component container element.
+                const itemContainer = document.createElement('div');
+
+                // Add the container element to the todo list.
+                todoListElement.insertAdjacentElement('beforeend', itemContainer);
+
+                // Attach the Blazor component to the container element.
+                const todoItem = await Blazor.rootComponents.add(itemContainer, 'TodoItem', {
+                    index: todoList.length,
+                });
+
+                todoList.push(todoItem);
+
+                await todoItem.setParameters({
+                    onRemove: async () => {
+                        const index = todoList.indexOf(todoItem);
+                        todoList.splice(index, 1);
+
+                        // Dispose the Blazor component and remove its container.
+                        await todoItem.dispose();
+                        itemContainer.remove();
+
+                        // Update the index for the other TODO items.
+                        for (let i = index; i < todoList.length; i++) {
+                            await todoList[i].setParameters({
+                                index: i,
+                            });
+                        }
+                    }
+                });
+            }
+        </script>
+    </head>
     <body>
-        <h1>Don't visit this page directly.</h1>
-        <p>This project exists to provide custom elements to other projects.</p>
-        <p>See README.md for instructions on running the JavaScript project samples.</p>
+        <script src="_framework/blazor.webassembly.js"></script>
+
+        <button onclick="addTodo()">Add TODO</button>
+
+        <div id="todo-list"></div>
     </body>
 </html>

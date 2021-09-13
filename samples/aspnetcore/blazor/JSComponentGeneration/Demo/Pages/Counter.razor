@@ -58,8 +58,6 @@
     </p>
 
 @code {
-    private int currentCount = 0;
-
     private DateOnly _departureDate = DateOnly.FromDateTime(DateTime.Now);
     private DateOnly _returnDate = DateOnly.FromDateTime(DateTime.Now).AddDays(1);
     private TimeOnly _preferredDepartureTime = new(12, 0, 0);

@@ -4,7 +4,7 @@
     <strong>@($"{Index + 1}: ")</strong>
     @if (_editing)
     {
-        <input type="text" placeholder="@($"Write todo item {Index}")" @bind-value="_content" />
+        <input type="text" placeholder="@($"Write todo item {Index + 1}")" @bind-value="_content" />
     }
     else
     {
