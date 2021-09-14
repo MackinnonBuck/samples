@@ -12,8 +12,8 @@
     }
 </p>
 
-<button @onclick="OnToggleEdit">@(_editing ? "Confirm" : "Edit")</button>
-<button @onclick="OnRemove">Remove</button>
+<button @onclick="OnEditClick">@(_editing ? "Confirm" : "Edit")</button>
+<button @onclick="OnRemoveClick">Remove</button>
 <hr>
 
 @code {
@@ -24,10 +24,15 @@
     public int Index { get; set; }
 
     [Parameter]
-    public EventCallback<MouseEventArgs> OnRemove { get; set; }
+    public EventCallback<int> OnRemove { get; set; }
 
-    private void OnToggleEdit()
+    private void OnEditClick()
     {
         _editing = !_editing;
+    }
+
+    private Task OnRemoveClick()
+    {
+        return OnRemove.InvokeAsync(Index);
     }
 }

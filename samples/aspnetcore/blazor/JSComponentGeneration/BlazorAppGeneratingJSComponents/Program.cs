@@ -8,7 +8,6 @@ using BlazorAppGeneratingJSComponents;
 using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-//builder.RootComponents.RegisterForAngular<TodoItem>();
 builder.RootComponents.RegisterForJavaScript<TodoItem>("TodoItem");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });

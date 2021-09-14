@@ -11,11 +11,7 @@ import { Component } from '@angular/core';
       </p>
 
       <div *ngFor="let todoItem of todoItems">
-        <!-- TODO: Render the TODO items list? -->
-        <todo-item
-          [index]="todoItem.index"
-          (onRemove)="removeTodoItem(todoItem.index)">
-        </todo-item>
+        <!-- TODO: Render the TODO items list -->
       </div>
     </div>
   `,

@@ -60,7 +60,7 @@
 @code {
     private DateOnly _departureDate = DateOnly.FromDateTime(DateTime.Now);
     private DateOnly _returnDate = DateOnly.FromDateTime(DateTime.Now).AddDays(1);
-    private TimeOnly _preferredDepartureTime = new(12, 0, 0);
+    private TimeOnly _preferredDepartureTime;
     private string[] _selectedAirlineNames = new string[] { };
     private Flight[] _departureFlights;
     private Flight[] _returnFlights;
